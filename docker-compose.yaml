@@ -1,0 +1,37 @@
+# docker-compose.yml
+version: '3.8'
+
+services:
+  # The Redis Database Service
+  redis:
+    image: redis:latest
+    container_name: redis_db
+    restart: always
+    ports:
+      - "6379:6379" # Expose Redis on the default port
+    volumes:
+      - redis-data:/data
+      - ./config/redis.conf:/usr/local/etc/redis/redis.conf # Mount custom configuration
+    command: redis-server /usr/local/etc/redis/redis.conf --requirepass ${REDIS_PASSWORD}
+    networks:
+      - redis-net
+
+  # The GUI Client Service
+  redis-insight:
+    image: redis/redisinsight:latest
+    container_name: redis_gui
+    restart: always
+    ports:
+      - "5540:5540" # Expose the GUI on port 5540
+    volumes:
+      - ./redis-insight-data:/db
+    networks:
+      - redis-net
+
+networks:
+  redis-net:
+    driver: bridge
+
+volumes:
+  redis-data:
+  redis-insight-data:
