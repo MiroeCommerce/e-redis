@@ -1,0 +1,6 @@
+# Ignore persisted data directories
+data/
+redis-insight-data/
+
+# Ignore common system files
+.DS_Store
